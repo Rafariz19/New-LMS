@@ -38,7 +38,7 @@ exports.register = async (
 
             if (role === "student") {
                 db.query(
-                    `INSERT INTO students (user_id, nim, jurusan) VALUES (?, ?, ?);`,
+                    `INSERT INTO students (student_id, nim, jurusan) VALUES (?, ?, ?);`,
                     [userId, nim, jurusan],
                     (err) => {
                         if (err) return res.status(500).json(err)
@@ -48,7 +48,7 @@ exports.register = async (
                 )
             } else if (role === "teacher") {
                 db.query(
-                    `INSERT INTO teachers (user_id, status) VALUES (?, ?);`,
+                    `INSERT INTO teachers (teacher_id, status) VALUES (?, ?);`,
                     [userId, status],
                     (err) => {
                         if (err) return res.status(500).json(err)
@@ -68,10 +68,17 @@ exports.login = (
     res
 ) => {
     const {email, password } = req.body
+
+    if (!email || !password) {
+        return res.status(400).json({
+            message: "Email and password are required"
+        })
+    }
+
     const sql = `
-        SELECT * FROM users WHERE email = ?
+        SELECT * FROM users WHERE email = ?;
     `
-    db.query(sql, [email], async (err, result) => {
+    db.query(sql, [email], async(err, result) => {
 
         if (err) {
             return res.status(500).json(err)
@@ -100,7 +107,6 @@ exports.login = (
             {
                 id: user.id,
                 role: user.role,
-                status: user.status
             },
             process.env.JWT_SECRET,
             {
@@ -145,7 +151,7 @@ exports.me = (
             if (role == "student") {
                 const sqlStudent = `
                         SELECT u.id, u.name, u.email, s.nim, s.jurusan
-                        FROM users u JOIN students s ON u.id = s.user_id
+                        FROM users u JOIN students s ON u.id = s.student_id
                         WHERE u.id = ?;
                     `
                     db.query(sqlStudent, [user_id], (err, studentResult) => {
@@ -156,7 +162,7 @@ exports.me = (
             } else if (role == "teacher") {
                     const sqlTeacher = `
                         SELECT u.id, u.name, u.email, t.status, t.approved_at
-                        FROM users u JOIN teachers t ON u.id = t.user_id
+                        FROM users u JOIN teachers t ON u.id = t.teacher_id
                         WHERE u.id = ?;
                     `
                     db.query(sqlTeacher, [user_id], (err, teacherResult) => {

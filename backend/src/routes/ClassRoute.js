@@ -1,6 +1,37 @@
 const express = require('express');
 const router = express.Router();
 
-// TODO: wire up routes using ../controllers/ClassController
+const ClassController = require('../controllers/ClassController');
+const AuthMiddleware = require('../middlewares/AuthMiddleware');
+const teacherApproved = require('../middlewares/TeacherMiddleware')
+
+router.post('/create', 
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.checkRole("teacher"),
+    teacherApproved,
+    ClassController.store
+)
+router.get('/list',
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.checkRole("student", "teacher", "admin"),
+    ClassController.index
+)
+router.get('/myclasses',
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.checkRole("student"),
+    ClassController.show
+)
+router.patch('/:id',
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.checkRole("teacher"),
+    teacherApproved,
+    ClassController.update
+)
+router.delete('/:classId',
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.checkRole("teacher"),
+    teacherApproved,
+    ClassController.destroy
+)
 
 module.exports = router;

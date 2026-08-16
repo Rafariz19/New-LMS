@@ -36,15 +36,15 @@ exports.approveTeacher = (
     res
 ) => {
     const approve = req.user.id 
-    const user_id = req.params.userId
+    const teacherId = req.params.userId
 
     const sqlApprove = `
         UPDATE teachers
         SET status = 'approved', approved_by = ?, approved_at = NOW()
-        WHERE user_id = ? AND status = 'pending';
+        WHERE teacher_id = ? AND status = 'pending';
     `
     db.query(sqlApprove, 
-        [approve, user_id],
+        [approve, teacherId],
         (err, result) => {
             if (err) {
                 return res.status(500).json({
