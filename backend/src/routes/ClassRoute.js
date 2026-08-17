@@ -21,7 +21,7 @@ router.get('/myclasses',
     AuthMiddleware.checkRole("student"),
     ClassController.show
 )
-router.patch('/:id',
+router.patch('/:classId',
     AuthMiddleware.verifyToken,
     AuthMiddleware.checkRole("teacher"),
     teacherApproved,

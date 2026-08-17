@@ -3,13 +3,13 @@ const router = express.Router();
 
 const EnrollmentController = require('../controllers/EnrollmentController');
 const AuthMiddleware = require('../middlewares/AuthMiddleware');
-const teacherApproved = require('../middlewares/TeacherMiddleware')
 
 router.post('/enroll',
     AuthMiddleware.verifyToken,
     AuthMiddleware.checkRole("student"),
     EnrollmentController.enroll
 )
+
 router.delete('/unenroll/:id',
     AuthMiddleware.verifyToken,
     AuthMiddleware.checkRole("student"),
@@ -18,7 +18,7 @@ router.delete('/unenroll/:id',
 router.get('/list/:id',
     AuthMiddleware.verifyToken,
     AuthMiddleware.checkRole("student", "teacher"),
-    EnrollmentController.listtStudents
+    EnrollmentController.listStudents
 )
 
 module.exports = router;

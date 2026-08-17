@@ -1,4 +1,5 @@
 ﻿const db = require("../config/db")
+const { handleDbError } = require('../util/handleDbError');
 
 exports.listTeachers = (
     req,
@@ -14,14 +15,14 @@ exports.listTeachers = (
         SELECT u.id, u.name, u.email, t.status, t.approved_at
         FROM teachers t 
         JOIN users u 
-        ON t.user_id = u.id
+        ON t.teacher_id = u.id
         WHERE t.status = ?;
     ` 
     db.query(sqlList, 
             [teacherStatus], 
             (err, result) => {
             
-            if (err) return res.status(500).json(err)
+            if (err) return handleDbError(res, err);    
             
             return res.status(200).json({
                 success: true,
@@ -35,6 +36,10 @@ exports.approveTeacher = (
     req,
     res
 ) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ success: false, error: "Unauthorized" });
+    }
+    
     const approve = req.user.id 
     const teacherId = req.params.userId
 
@@ -78,7 +83,7 @@ exports.rejectTeacher = (
     const sqlReject = `
         UPDATE teachers
         SET status = 'rejected'
-        WHERE user_id = ? AND status = 'pending';
+        WHERE teacher_id = ? AND status = 'pending';
     `
     db.query(sqlReject,
         [user_id],
@@ -86,7 +91,7 @@ exports.rejectTeacher = (
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: "Failed rejecte teacher",
+                    message: "Failed rejected teacher",
                     error: err.message
                 });
             }

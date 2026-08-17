@@ -7,8 +7,13 @@ exports.uploadMaterial = (
 ) => {
 
     const class_id = req.params.id
-    const {title} = req.body
+    const { title } = req.body
+
+    if (!req.file) {
+        return res.status(400).json({ message: "File is required" });
+    }
     const file_url = req.file.filename
+    
     const teacher_id = req.user.id
 
     const sql = `
@@ -42,14 +47,14 @@ exports.uploadMaterial = (
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: "Gagal menambahkan material",
+                    message: "Failed to add material",
                     error: err.message
                 })
             }
 
             res.status(201).json({
                 success: true,
-                message: "Material berhasil ditambahkan",
+                message: "Material added successfully",
                 data: {
                     id: result.insertId,
                     title,
@@ -61,7 +66,7 @@ exports.uploadMaterial = (
 
 }
 
-exports.getMaterialsByClass = ( req, res) => {
+exports.getMaterialsByClass = (req, res) => {
     const class_id = req.params.id
 
     const sql = `
@@ -87,7 +92,7 @@ exports.getMaterialsByClass = ( req, res) => {
         (err, result) => {
 
             if (err) {
-                return res.status(500).json(err)
+                return handleDbError(res, err);
             }
 
             res.json(result)
@@ -101,12 +106,13 @@ exports.downloadMaterial = (
     res
 ) => {
 
-    const filePath = path.join(
-        __dirname,
-        "../uploads",
-        req.params.filename
-    )
+    const uploadsDir = path.resolve(__dirname, "../uploads");
+    const filePath = path.resolve(uploadsDir, req.params.filename);
 
-    res.download(filePath)
+    if (!filePath.startsWith(uploadsDir)) {
+        return res.status(400).json({ message: "Invalid filename" });
+    }
+
+    res.download(filePath);
 
 }

@@ -1,5 +1,6 @@
 ﻿const db = require("../config/db")
 const { handleDbError } = require('../util/handleDbError');
+const bcrypt = require('bcrypt');
 
 exports.enroll = (
     req,
@@ -10,25 +11,53 @@ exports.enroll = (
     }
 
     const student_id = req.user.id 
-    const {name} = req.body
+
+    const {name, code} = req.body
 
     if (!name || !name.trim()) {
         return res.status(400).json({ message: "Class name is required" })
     }
+    if (!code || !code.trim()) {
+        return res.status(400).json({ message: "Class code is required" });
+    }
 
-
-    const sql = `
-    INSERT INTO enrollments (class_id, student_id, enrolled_at)
-    SELECT id, ?, NOW()
-    FROM classes
-    WHERE name = ?;
-    `
+    const sql = `SELECT id, code FROM classes WHERE name = ?;`
     db.query(sql, 
-        [student_id, name],
-        (err, result) => {
+        [student_id, code],
+        async (err, rows) => {
             if (err) return handleDbError(res, err);
-            res.status(201).json({ message: "Enroll successfully" })
+            if (rows.length === 0) {
+                return res.status(404).json({ success: false, message: "Class not found" });
+            }
+
+            const classData = rows[0]
+
+            try {
+                const isMatch = await bcrypt.compare(
+                    code,
+                    classData.code
+                )
+                if (!isMatch) {
+                    return res.status(401).json({
+                        message: "Invalid code"
+                    })
+                }
+
+                const sqlEnroll = `
+                    INSERT INTO enrollments (class_id, student_id, enrolled_at)
+                    VALUES (?, ?, NOW());
+                `;
+                db.query(sqlEnroll, [classData.id, student_id], (err2, result) => {
+                    if (err2) return handleDbError(res, err2);
+                    return res.status(201).json({ message: "Enroll successfully" });
+                });
+
+                return res.status(201).json({ message: "Enroll successfully" });
+            } catch (compareErr) {
+            return handleDbError(res, compareErr);
+
         }
+        } 
     )
     
 }
@@ -50,14 +79,14 @@ exports.unenroll = (
         [class_id, student_id],
     (err, result) => {
         if (err) return handleDbError(res, err);
-            res.status(201).json({ message: "Unenroll successfully" })
+            res.status(200).json({ message: "Unenroll successfully" })
     })
 
 
     
 }
 
-exports.listtStudents = (
+exports.listStudents = (
     req,
     res
 ) => {

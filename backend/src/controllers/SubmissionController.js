@@ -21,11 +21,11 @@ exports.store = (
     `
     db.query(
         sql,
-        [assignments_id, student_id, file_url],
+        [assignments_id, student_id],
         (err, result) => {
             if (err) return handleDbError(res, err);
 
-            if (result.affectedRows === 0) {
+            if (result.length === 0) {
             return res.status(404).json({ message: "Class not found or you don't have access" });
             }
 
@@ -155,7 +155,7 @@ exports.grade = (
             return res.status(404).json({ message: "Submission not found or not accessible" });
             }
 
-            res.status(201).json({ message: "Grade updated successfully", data: result})
+            res.status(200).json({ message: "Grade updated successfully", data: result})
         }
     )
 }

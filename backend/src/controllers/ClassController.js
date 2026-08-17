@@ -2,6 +2,7 @@
 const { handleDbError } = require('../util/handleDbError');
 const userModel = require('../models/userModel');
 const classModel = require('../models/classModel');
+const bcrypt = require('bcrypt');
 
 exports.store = (
     req,
@@ -12,24 +13,32 @@ exports.store = (
     }
 
     const teacher_id = req.user.id
-    const {name} = req.body
+    const {name, code} = req.body
 
     if (!name || !name.trim()) {
         return res.status(400).json({ message: "Class name is required" })
     }
-
-    const sqlStore = `
-    INSERT INTO classes (name, teacher_id) VALUES (?, ?);
-    `
-    db.query(sqlStore,
-        [name, teacher_id],
-        (err, result) => {
-            if (err) return handleDbError(res, err)
-
-            res.status(201).json({ message: "Create class successfully" })
-        }
+    if (!code || !code.trim()) {
+        return res.status(400).json({ message: "Class code is required" });
+    }
+    try {
+        const hashedCode = await bcrypt.hash(code, 10);
         
-    )
+        const sqlStore = `
+        INSERT INTO classes (name, teacher_id, code) VALUES (?, ?, ?);
+        `
+        db.query(sqlStore,
+            [name, teacher_id, hashedCode],
+            (err, result) => {
+                if (err) return handleDbError(res, err)
+    
+                res.status(201).json({ message: "Create class successfully" })
+            }
+            
+        )
+    } catch (err) {
+        return handleDbError(res, err);
+    }
 }
 
 exports.index = (
@@ -116,7 +125,7 @@ exports.update = (
         [name, class_id, teacher_id],
         async(err, result) => {
             if (err) return handleDbError(res, err);
-            res.status(201).json({ message: "Update class successfully" })
+            res.status(200).json({ message: "Update class successfully" })
             console.log(result.affectedRows);
         })
         
@@ -134,7 +143,7 @@ exports.update = (
             [class_id, teacher_id],
             async(err, result) => {
                 if (err) return handleDbError(res, err);
-                res.status(201).json({ message: "Delete class successfully" })
+                res.status(200).json({ message: "Delete class successfully" })
                 console.log(result.affectedRows);
         }
     )

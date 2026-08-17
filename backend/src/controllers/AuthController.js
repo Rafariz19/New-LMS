@@ -1,13 +1,14 @@
 ﻿const db = require("../config/db")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const { handleDbError } = require('../util/handleDbError');
 
 exports.register = async (
     req, 
     res
 ) => {
     try {
-        const { name, email, password, role} = req.body
+        const { name, email, password, role, nim, jurusan} = req.body
 
         const allowedRoles = [
             "student", "teacher"
@@ -32,7 +33,7 @@ exports.register = async (
         db.query(sqlUser, 
             [name, email, hashedPassword, role], 
             async (err, result) => {
-            if (err) return res.status(500).json(err)
+            if (err) return handleDbError(res, err);
 
             const userId = result.insertId
 
@@ -41,7 +42,7 @@ exports.register = async (
                     `INSERT INTO students (student_id, nim, jurusan) VALUES (?, ?, ?);`,
                     [userId, nim, jurusan],
                     (err) => {
-                        if (err) return res.status(500).json(err)
+                        if (err) return handleDbError(res, err);
 
                         res.status(201).json({ message: "User registered successfully" })
                     }
@@ -51,15 +52,15 @@ exports.register = async (
                     `INSERT INTO teachers (teacher_id, status) VALUES (?, ?);`,
                     [userId, status],
                     (err) => {
-                        if (err) return res.status(500).json(err)
+                        if (err) return handleDbError(res, err);
 
                         res.status(201).json({ message: "User registered successfully" })
                     }
                 )
             }
         })
-    } catch (error) {
-        res.status(500).json(error)
+    } catch (err) {
+        return handleDbError(res, err);
     }
 }
 
@@ -81,7 +82,7 @@ exports.login = (
     db.query(sql, [email], async(err, result) => {
 
         if (err) {
-            return res.status(500).json(err)
+            return handleDbError(res, err);
         }
 
         if (result.length === 0) {

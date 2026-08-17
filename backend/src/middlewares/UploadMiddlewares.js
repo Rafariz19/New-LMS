@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
 
     destination: (req, file, cb) => {
 
-        cb(null,  path.join(__dirname, "../uploads"))  // naik 2 folder dari src/middleware ke root project, lalu masuk ke folder uploads
+        cb(null, path.join(__dirname, "../uploads"))  
     },
 
     filename: (req, file, cb) => {
@@ -20,7 +20,20 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({
-    storage
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const allowedExtensions = [".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".xls", ".xlsx"];
+        const ext = path.extname(file.originalname).toLowerCase();
+
+        if (allowedExtensions.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb(new Error("Jenis file tidak diizinkan"));
+        }
+    },
+    limits: {
+        fileSize: 1024 * 1024 * 10 // 10MB limit
+    }
 })
 
 module.exports = upload
