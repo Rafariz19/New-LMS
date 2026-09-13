@@ -23,7 +23,7 @@ exports.enroll = (
 
     const sql = `SELECT id, code FROM classes WHERE name = ?;`
     db.query(sql, 
-        [student_id, code],
+        [name],
         async (err, rows) => {
             if (err) return handleDbError(res, err);
             if (rows.length === 0) {
@@ -47,12 +47,10 @@ exports.enroll = (
                     INSERT INTO enrollments (class_id, student_id, enrolled_at)
                     VALUES (?, ?, NOW());
                 `;
-                db.query(sqlEnroll, [classData.id, student_id], (err2, result) => {
+                db.query(sqlEnroll, [classData.id, student_id], (err2) => {
                     if (err2) return handleDbError(res, err2);
                     return res.status(201).json({ message: "Enroll successfully" });
                 });
-
-                return res.status(201).json({ message: "Enroll successfully" });
             } catch (compareErr) {
             return handleDbError(res, compareErr);
 

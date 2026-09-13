@@ -1,4 +1,4 @@
-﻿const db = require("../config/db")
+const db = require("../config/db")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { handleDbError } = require('../util/handleDbError');
@@ -136,40 +136,74 @@ exports.me = (
     res
 ) => {
     const user_id = req.user.id
-    const sql = `SELECT name, email, role, created_at FROM users WHERE id = ?`
+    const sql = `SELECT name, email, role, avatar, created_at FROM users WHERE id = ?`
 
     db.query(
         sql,
         [user_id],
-        (err,result) => {
-        if (err) return res.status(500).json(err)
+        (err, result) => {
+            if (err) return res.status(500).json(err);
 
-        if (result.length === 0) {
-            return res.status(404).json({ message: "User not found" })
-        }
+            if (result.length === 0) {
+                return res.status(404).json({ message: "User not found" });
+            }
 
-        const role = result[0].role
+            const role = result[0].role;
             if (role == "student") {
                 const sqlStudent = `
-                        SELECT u.id, u.name, u.email, s.nim, s.jurusan
-                        FROM users u JOIN students s ON u.id = s.student_id
-                        WHERE u.id = ?;
-                    `
-                    db.query(sqlStudent, [user_id], (err, studentResult) => {
-                        if (err) return res.status(500).json(err)
-                        res.status(200).json(studentResult[0])
-                    })
+                    SELECT u.id, u.name, u.email, u.role, u.avatar, s.nim, s.jurusan, u.created_at
+                    FROM users u JOIN students s ON u.id = s.student_id
+                    WHERE u.id = ?;
+                `;
+                db.query(sqlStudent, [user_id], (err, studentResult) => {
+                    if (err) return res.status(500).json(err);
+                    res.status(200).json(studentResult[0]);
+                });
 
             } else if (role == "teacher") {
-                    const sqlTeacher = `
-                        SELECT u.id, u.name, u.email, t.status, t.approved_at
-                        FROM users u JOIN teachers t ON u.id = t.teacher_id
-                        WHERE u.id = ?;
-                    `
-                    db.query(sqlTeacher, [user_id], (err, teacherResult) => {
-                        if (err) return res.status(500).json(err)
-                        res.status(200).json(teacherResult[0])
-                    })
+                const sqlTeacher = `
+                    SELECT u.id, u.name, u.email, u.role, u.avatar, t.status, t.approved_at, u.created_at
+                    FROM users u JOIN teachers t ON u.id = t.teacher_id
+                    WHERE u.id = ?;
+                `;
+                db.query(sqlTeacher, [user_id], (err, teacherResult) => {
+                    if (err) return res.status(500).json(err);
+                    res.status(200).json(teacherResult[0]);
+                });
+
+            } else if (role == "admin") {
+                const sqlAdmin = `
+                    SELECT u.id, u.name, u.email, u.role, u.avatar, u.created_at
+                    FROM users u
+                    WHERE u.id = ?;
+                `;
+                db.query(sqlAdmin, [user_id], (err, adminResult) => {
+                    if (err) return res.status(500).json(err);
+                    res.status(200).json(adminResult[0]);
+                });
+            } else {
+                res.status(400).json({ message: "Invalid role" });
+            }
         }
-    })
-}
+    );
+};
+
+exports.updateAvatar = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: "File avatar is required" });
+    }
+    const user_id = req.user.id;
+    const avatar = req.file.filename;
+
+    const sql = `UPDATE users SET avatar = ? WHERE id = ?`;
+    db.query(sql, [avatar, user_id], (err, result) => {
+        if (err) return handleDbError(res, err);
+        return res.status(200).json({
+            success: true,
+            message: "Foto profil berhasil diperbarui",
+            avatar: avatar,
+            avatar_url: `/uploads/${avatar}`
+        });
+    });
+};
+

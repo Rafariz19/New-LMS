@@ -4,7 +4,7 @@ const userModel = require('../models/userModel');
 const classModel = require('../models/classModel');
 const bcrypt = require('bcrypt');
 
-exports.store = (
+exports.store = async (
     req,
     res
 ) => {
@@ -29,7 +29,7 @@ exports.store = (
         `
         db.query(sqlStore,
             [name, teacher_id, hashedCode],
-            (err, result) => {
+            async (err, result) => {
                 if (err) return handleDbError(res, err)
     
                 res.status(201).json({ message: "Create class successfully" })

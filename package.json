@@ -1,25 +1,13 @@
 {
-  "name": "new-lms",
-  "version": "1.0.0",
-  "description": "��#\u0000 \u0000N\u0000e\u0000w\u0000-\u0000L\u0000M\u0000S\u0000\r\u0000 \u0000",
-  "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "backend": "npm run dev --prefix Backend",
+    "frontend": "npm run dev --prefix Frontend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Rafariz19/New-LMS.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Rafariz19/New-LMS/issues"
-  },
-  "homepage": "https://github.com/Rafariz19/New-LMS#readme",
   "devDependencies": {
-    "concurrently": "^10.0.4"
+    "concurrently": "^10.0.5"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0"
   }
 }
