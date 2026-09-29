@@ -21,7 +21,7 @@ New-LMS adalah aplikasi web yang dirancang untuk mempermudah kegiatan belajar-me
 
 ## 3. Tampilan Aplikasi
 
-> 📷 **[Tempat screenshot: Halaman Login & Registrasi Multi-Peran]** — simpan sebagai docs/screenshots/01-login-register.png
+> 📷 **[Tempat screenshot: Halaman Login & Registrasi Multi-Peran]** 
 
 <!-- ![Halaman Login & Registrasi Multi-Peran](docs/screenshots/01-login-register.png) -->
 
@@ -31,7 +31,7 @@ New-LMS adalah aplikasi web yang dirancang untuk mempermudah kegiatan belajar-me
 
 Menampilkan antarmuka masuk dan pendaftaran akun dengan pemisahan peran Siswa (NIM & Jurusan) serta Pengajar.
 
-> 📷 **[Tempat screenshot: Panel Persetujuan Akun Guru oleh Admin]** — simpan sebagai docs/screenshots/02-admin-approval.png
+> 📷 **[Tempat screenshot: Panel Persetujuan Akun Guru oleh Admin]** 
 
 <!-- ![Panel Persetujuan Akun Guru oleh Admin](docs/screenshots/02-admin-approval.png) -->
 
@@ -39,7 +39,7 @@ Menampilkan antarmuka masuk dan pendaftaran akun dengan pemisahan peran Siswa (N
 
 Menampilkan dashboard admin untuk meninjau status pendaftaran pengajar (*pending*, *approved*, *rejected*) dan daftar kelas aktif.
 
-> 📷 **[Tempat screenshot: Manajemen Kelas & Materi Pengajar]** — simpan sebagai docs/screenshots/03-teacher-classes.png
+> 📷 **[Tempat screenshot: Manajemen Kelas & Materi Pengajar]** 
 
 <!-- ![Manajemen Kelas & Materi Pengajar](docs/screenshots/03-teacher-classes.png) -->
 
@@ -51,14 +51,14 @@ Menampilkan dashboard admin untuk meninjau status pendaftaran pengajar (*pending
 
 Menampilkan daftar kelas yang diampu pengajar, pembuatan kode akses kelas, dan antarmuka unggah modul materi pelajaran.
 
-> 📷 **[Tempat screenshot: Penilaian dan Umpan Balik Tugas]** — simpan sebagai docs/screenshots/04-grading-submissions.png
+> 📷 **[Tempat screenshot: Penilaian dan Umpan Balik Tugas]** 
 > ![1790698577383](image/README/1790698577383.png)
 
 <!-- ![Penilaian dan Umpan Balik Tugas](docs/screenshots/04-grading-submissions.png) -->
 
 Menampilkan tabel berkas tugas siswa yang masuk beserta formulir pengisian nilai (skala 0–100) dan catatan evaluasi.
 
-> 📷 **[Tempat screenshot: Portal Siswa (Eksplorasi Kelas & Riwayat Nilai)]** — simpan sebagai docs/screenshots/05-student-portal.png
+> 📷 **[Tempat screenshot: Portal Siswa (Eksplorasi Kelas & Riwayat Nilai)]** 
 > ![1790698639026](image/README/1790698639026.png)
 > ![1790698675666](image/README/1790698675666.png)
 > ![1790698696041](image/README/1790698696041.png)
