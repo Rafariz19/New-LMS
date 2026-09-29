@@ -185,7 +185,7 @@ New-LMS/
 
 ## 9. Rencana Pengembangan
 
-- [ ] [ISI: rencana pengembangan AI yang ditargetkan pemilik, misal: asisten evaluasi esai otomatis] *(Belum diimplementasikan)*
+- [ ] Rencana pengembangan AI yang ditargetkan : asisten evaluasi esai otomatis *(Belum diimplementasikan)*
 - [ ] Skrip migrasi dan *seeding* database otomatis *(Belum diimplementasikan)*
 - [ ] Integrasi penyimpanan awan (Cloud Storage) untuk file berkas materi dan tugas *(Belum diimplementasikan)*
 - [ ] Layanan notifikasi email untuk tenggat waktu tugas dan persetujuan akun *(Belum diimplementasikan)*
@@ -194,10 +194,10 @@ New-LMS/
 
 ## 10. Peran dan Kontribusi
 
-- [ISI: peranku dan lapisan yang kukerjakan, misal: Fullstack Developer yang bertanggung jawab pada perancangan arsitektur REST API backend, skema relasional MySQL, serta integrasi komponen dashboard antarmuka React]
+- Peranku dan lapisan yang kukerjakan : Fullstack Developer yang bertanggung jawab pada perancangan arsitektur REST API backend, skema relasional MySQL, serta integrasi komponen dashboard antarmuka React
 
 ---
 
 ## 11. Penggunaan AI dalam Pengembangan
 
-- [ISI: tool apa dan untuk apa, misal: bantuan perancangan dokumentasi arsitektur, penyusunan kueri optimasi database, atau refaktorisasi komponen antarmuka]
+- Bantuan perancangan dokumentasi arsitektur, penyusunan kueri optimasi database, atau refaktorisasi komponen antarmuka]
