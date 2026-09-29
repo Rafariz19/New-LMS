@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, UserCheck, GraduationCap, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, UserCheck, GraduationCap, ArrowLeft, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authService } from '../../api/authService';
 import Button from '../../components/common/Button';
@@ -14,6 +14,7 @@ export default function RegisterPage() {
     nim: '',
     jurusan: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -201,14 +202,23 @@ export default function RegisterPage() {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Minimal 6 karakter"
                   required
-                  className="block w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-textPrimary placeholder:text-slate-400 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  className="block w-full pl-10 pr-11 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-textPrimary placeholder:text-slate-400 focus:bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-textPrimary transition-colors focus:outline-none"
+                  title={showPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 

@@ -8,10 +8,21 @@ const app = express();
 
 app.use(morgan('dev'));
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL  // url tunnel frontend, dari .env
+]
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true
-}));
+}))
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
